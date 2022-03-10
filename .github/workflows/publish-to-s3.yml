@@ -1,0 +1,41 @@
+name: publish-to-s3
+on:
+  push:
+    branches:
+      - "publish-package-s3-action"
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and Publish
+    runs-on: ${{ matrix.os }} #mac #windows
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-2
+      AWS_DEFAULT_OUTPUT: json
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        node: [10, 12, 14, 16]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      # Dependencies install
+      - name: Setup Global Dependencies
+        run: npm --version
+
+      - name: Deploy
+        run: |
+         'echo "{ "accessKeyId": "<key>", "secretAccessKey": "<secret>" }" > .node-pre-gyp.config'
+         ./deploy.sh
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
