@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - run: git submodule update --init --recursive
+      
       # Dependencies install
       - name: Setup Global Dependencies
         run: npm install
