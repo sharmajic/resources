@@ -17,8 +17,8 @@ jobs:
       AWS_DEFAULT_OUTPUT: json
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
-        node: [10, 12, 14, 16]
+        os: [ubuntu-latest]
+        node: [14]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,13 +29,13 @@ jobs:
 
       # Dependencies install
       - name: Setup Global Dependencies
-        run: npm --version
+        run: npm install
 
-      - name: Deploy
-        run: |
-         'echo "{ "accessKeyId": "<key>", "secretAccessKey": "<secret>" }" > .node-pre-gyp.config'
-         ./deploy.sh
-        shell: bash
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#       - name: Deploy
+#         run: |
+#          'echo "{ "accessKeyId": "<key>", "secretAccessKey": "<secret>" }" > .node-pre-gyp.config'
+#          ./deploy.sh
+#         shell: bash
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
